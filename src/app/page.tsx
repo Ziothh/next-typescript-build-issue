@@ -1,91 +1,40 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
 import styles from './page.module.css'
+import type { FC, ReactElement, ValidationMap, WeakValidationMap } from 'react';
 
-const inter = Inter({ subsets: ['latin'] })
-
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+interface AsyncFunctionComponent<P extends Object = {}> {
+  (props: P, context?: any): Promise<ReactElement<any, any> | null>;
+  propTypes?: WeakValidationMap<P> | undefined;
+  contextTypes?: ValidationMap<any> | undefined;
+  defaultProps?: Partial<P> | undefined;
+  displayName?: string | undefined;
 }
+
+export type AsyncFC<P extends Object = {}> = AsyncFunctionComponent<P>;
+
+export type OptionalAsyncFC<P extends Object = {}> = AsyncFC<P> | FC<P>
+
+export type WithParams<
+  Props extends Object,
+  Params extends Object = {},
+  SearchParams extends Object = {}
+> = Props & {
+  params: Params,
+  searchParams: SearchParams,
+}
+
+/** A better type than the default `NextPage` type, given by next.
+ * This should be given to an app dir page component when you need typesafe params.
+ *
+ * @param Params - Should match the file system routing like `"/user/[userId]/todos/[todoId]/[tab]"`
+ * @param SearchParams - Should match the queries in the url like `"?q=hi&other=hi+again"`
+ * @param Props - Rroperties this page should have. This is not needed in most cases because pages don't receive props.
+ * */
+export type NextPage<
+  Params extends object = {},
+  SearchParams extends object = {},
+  Props extends Object = {},
+> = OptionalAsyncFC<WithParams<Props, Params, SearchParams>>
+
+const page: NextPage = ({ params, searchParams }) => (
+  null
+)
